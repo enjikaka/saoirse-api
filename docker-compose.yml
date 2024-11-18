@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  mongo_db:
+    image: mongo
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile-dev
+    image: saoirse-api
+    working_dir: /go/src/Saoirse/api
+    environment:
+      - MONGO_URL=mongo_db
+      - DB_NAME=test
+    depends_on:
+      - mongo_db
+    ports:
+      - 8877:5000
+    volumes:
+      - .:/go/src/Saoirse/api
+    command: bash -c "go install Saoirse/api && /go/bin/api"
